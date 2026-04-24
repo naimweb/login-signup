@@ -18,7 +18,7 @@ function Login() {
       localStorage.setItem("token", res.data.token);
 
       alert("Login successful");
-     
+      navigate("/dashboard");
       setEmail("");
       setPassword("");
 
