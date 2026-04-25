@@ -5,45 +5,67 @@ import User from "../module/user.js";
 
 const router = express.Router();
 
-// Register
+// REGISTER
 router.post("/register", async (req, res) => {
-  const { email, password } = req.body;
+  console.log("BODY:", req.body);
+  try {
+    const { email, password } = req.body;
 
-  const hashed = await bcrypt.hash(password, 10);
+    if (!email || !password) {
+      return res.status(400).json({ msg: "Missing fields" });
+    }
 
-  const newUser = new User({
-    email,
-    password: hashed
-  });
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ msg: "User already exists" });
+    }
 
-  await newUser.save();
+    const hashed = await bcrypt.hash(password, 10);
 
-  res.json({ msg: "User registered" });
+    const newUser = new User({
+      email,
+      password: hashed,
+    });
+
+    await newUser.save();
+
+    res.status(201).json({ msg: "User registered" });
+
+  } catch (err) {
+    console.log("REGISTER ERROR:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
 });
 
-// Login
+// LOGIN
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
+    const user = await User.findOne({ email });
 
-  if (!user) {
-    return res.status(400).json({ msg: "User not found" });
+    if (!user) {
+      return res.status(400).json({ msg: "User not found" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ msg: "Wrong password" });
+    }
+
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.json({ token });
+
+  } catch (err) {
+    console.log("LOGIN ERROR:", err);
+    res.status(500).json({ msg: "Server error" });
   }
-
-  const isMatch = await bcrypt.compare(password, user.password);
-
-  if (!isMatch) {
-    return res.status(400).json({ msg: "Wrong password" });
-  }
-
-  const token = jwt.sign(
-    { id: user._id },
-    process.env.JWT_SECRET,
-    { expiresIn: "1h" }
-  );
-
-  res.json({ token });
 });
 
 export default router;
