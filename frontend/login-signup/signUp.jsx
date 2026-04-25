@@ -7,24 +7,26 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
+const handleSignup = async (e) => {
+  e.preventDefault();
+  try {
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/auth/register`,
+      {
         email,
         password,
-      });
+      }
+    );
 
-      console.log(res.data);
-      alert("Signup successful");
-      setEmail("");
-      setPassword("");
-
-    } catch (err) {
-      alert("Error signing up");
-      console.error(err.response?.data);
-    }
-  };
+    console.log(res.data);
+    alert("Signup successful");
+    setEmail("");
+    setPassword("");
+  } catch (err) {
+    alert("Error signing up");
+    console.error(err.response?.data);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600">

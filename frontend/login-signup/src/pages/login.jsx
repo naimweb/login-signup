@@ -7,28 +7,29 @@ function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+const handleLogin = async (e) => {
+  e.preventDefault();
+  try {
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/auth/login`,
+      {
         email,
         password,
-      });
+      }
+    );
 
-      localStorage.setItem("token", res.data.token);
+    localStorage.setItem("token", res.data.token);
 
-      alert("Login successful");
-      navigate("/dashboard");
-      setEmail("");
-      setPassword("");
+    alert("Login successful");
+    navigate("/dashboard");
+    setEmail("");
+    setPassword("");
 
-    } 
-    catch (err) {
-      alert("Invalid email or password");
-      console.error(err.response?.data);
-    }
-  };
-
+  } catch (err) {
+    alert("Invalid email or password");
+    console.error(err.response?.data);
+  }
+};
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 to-indigo-600">
       <form

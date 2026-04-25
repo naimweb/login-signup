@@ -1,4 +1,4 @@
-import Dashboard from './NavDashboard'
+import Dashboard from './nav'
 
 function dashboard() {
   return (
