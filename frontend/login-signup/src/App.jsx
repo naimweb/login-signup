@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/login";
 import Signup from "../signUp";
 import Dashboard from "./components/dashboard";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -11,7 +12,9 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
-    </BrowserRouter>
+
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false}/>
+  </BrowserRouter>
   );
 }
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 
 function Login() {
@@ -20,13 +21,13 @@ const handleLogin = async (e) => {
 
     localStorage.setItem("token", res.data.token);
 
-    alert("Login successful");
+    toast.success("Login successful");
     navigate("/dashboard");
     setEmail("");
     setPassword("");
 
   } catch (err) {
-    alert("Invalid email or password");
+    toast.error("Invalid email or password");
     console.error(err.response?.data);
   }
 };
